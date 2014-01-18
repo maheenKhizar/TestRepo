@@ -1,0 +1,11 @@
+﻿@{
+    // Sets the layout page for all pages in the folder.
+    Layout = "~/Layouts/_Layout.cshtml";   
+
+    if (!Roles.IsUserInRole(WebSecurity.CurrentUserName, "Admin")) 
+    { 
+        string currentUrl = Request.Url.ToString(); 
+        Response.Redirect("~/Login?sender=" + currentUrl); 
+    } 
+
+}

@@ -1,0 +1,12 @@
+﻿@{ 
+    Layout = "~/Layouts/_Layout.cshtml"; 
+    PageData["title"] = "Log Out"; 
+    WebSecurity.Logout(); 
+    Session["productList"] = null; 
+    
+}
+<div style="margin-left: 20%">
+<h1 >Log Out</h1> 
+<p>You have been logged out from the site.</p> 
+<p><a href="@Href("~/default")">Return to home page</a></p> 
+</div>

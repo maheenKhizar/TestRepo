@@ -1,0 +1,16 @@
+﻿@* Admin Functions *@ 
+@functions { 
+    public static bool CategoryExists(string categoryTitle) 
+    { 
+        var db = Database.Open("eShop"); 
+        var sqlQuery = "SELECT Id FROM Categories WHERE Title = @0"; 
+        return db.Query(sqlQuery, categoryTitle).Count() > 0; 
+    }
+
+    public static bool CategoryIsEmpty(string categoryId) 
+    { 
+        var db = Database.Open("eShop"); 
+        var sqlQuery = "SELECT ProductID FROM Products WHERE Category = @0"; 
+        return db.Query(sqlQuery, categoryId).Count() == 0; 
+    } 
+}

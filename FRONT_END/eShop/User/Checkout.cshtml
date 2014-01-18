@@ -1,0 +1,152 @@
+﻿@{     
+    
+    Layout = "~/Layouts/_Layout.cshtml"; 
+    PageData["title"] = "Checkout"; 
+
+    var address1 = ""; 
+    var address2 = ""; 
+    var town = ""; 
+    var region = ""; 
+    var postalCode = ""; 
+    var country = ""; 
+
+    // Redirect to Cart.cshtml if no cart exists in Session 
+    if (Session["productList"] == null) 
+    { 
+       // Response.Redirect("ShoppingCart"); 
+    } 
+
+    // Get current cart from Session 
+    Dictionary<string, int> prods = (Dictionary<string, int>) Session["productList"]; 
+
+    // Redirect to cart.cshtml if cart has no items 
+    if(prods.Count == 0) 
+    { 
+       // Response.Redirect("ShoppingCart"); 
+    } 
+
+    // getting products
+    var p = "SELECT ProductID, Name, Price FROM Products WHERE ProductID = @0";
+
+
+
+
+    // POST REQUEST HANDLER GOES HERE 
+    var db = Database.Open("eShop"); 
+
+    //validation
+    Validation.RequireField("address1", "please enter address");
+    Validation.RequireField("address2", "please enter address");
+    Validation.RequireField("town", "please enter town name");
+    Validation.RequireField("region", "please enter region");
+    Validation.RequireField("postalCode", "please enter postal code");
+    Validation.RequireField("country", "please enter country name");
+
+
+    if (IsPost) 
+    { 
+        address1 = Request["address1"]; 
+        address2 = Request["address2"]; 
+        town = Request["town"]; 
+        region = Request["region"]; 
+        postalCode = Request["postalCode"]; 
+        country = Request["country"];
+
+        if(Validation.IsValid())
+        {
+            // Save Order 
+            var UserID = WebSecurity.GetUserId(WebSecurity.CurrentUserName); 
+            
+            var orderSql = "INSERT INTO OrderItems (UserId, OrderTotal, " + 
+            "OrderDateTime, Address1, Address2, Town, " + 
+            "Region, PostalCode, Country) " + 
+            "VALUES ( @0, @1, @2, @3, @4, @5, @6, @7, @8)";
+            
+            db.Execute(orderSql, UserID, Session["totalPrice"], DateTime.Now, address1, address2, 
+                town, region, postalCode, country);            
+
+            var orderId = db.GetLastInsertId(); 
+            
+            foreach(string key in prods.Keys)
+            {
+                var pd = db.Query(p, key);
+                foreach(var item in pd) 
+                { 
+                    orderSql = "INSERT INTO Orders (OrderID, ProductID, Quantity, Price) VALUES (" + 
+                    "@0, @1, @2, @3)"; 
+                    db.Execute(orderSql, orderId, item.ProductID, prods[key], item.Price); 
+                }
+            } 
+            // Send confirmation email 
+            //WebMail.Send(to: WebSecurity.CurrentUserName, 
+            //subject: "eShop Order Confirmation", 
+            //body: "Many thanks for your order. Your items will be " + 
+            //"dispatched shortly and should arrive within 3-5 working days." 
+            
+
+            // Clear shopping cart 
+           // cart.Clear(); 
+            Response.Redirect("Billing"); 
+        }
+    }
+
+    int count = 0;
+}
+
+<h1 style="margin-left: 20%">Checkout</h1> 
+<center>
+<table></table>
+<table cellpadding='2' cellspacing='0' id='ap_table'>
+    <tr><td >
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+              <input type="hidden" name="cmd" value="_cart">
+<input type="hidden" name="upload" value="1">
+<input type="hidden" name="business"
+value="tipix_1356776467_biz@pucit.edu.pk">
+              
+            <table cellpadding='0' cellspacing='10' border='0' width='100%'><tr><td><b><h2>Order Details</h2> </b></tr>
+                <tr> 
+                    <th class="product">Product</th> 
+                    <th class="size">Quantity</th> 
+                    <th class="price">Price</th> 
+                </tr>
+                @foreach(string key in prods.Keys)
+                    {
+                        var pd = db.Query(p, key);
+                        foreach(var item in pd) 
+                        { 
+                            count++;
+                            <tr> 
+                                <input type="hidden" name="item_name_@count"
+                                value="@item.Name">
+                                <input type="hidden" name="amount_@count" value="@item.Price">
+
+                                <td class="product">@item.Name</td> 
+                                <td class="qt">@prods[key]</td> 
+                                <td class="price">$@item.Price</td> 
+                            </tr> 
+                        }
+                    }         
+                <tr class="cartTotal"> 
+                <td></td>
+                <td>Total:</td> 
+                <td> £@Session["totalPrice"]</td> 
+                </tr>  
+                <tr> 
+                <td></td>
+                <td><input type="image"
+                src="https://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif"
+                border="0" name="submit" alt=""></td> 
+                <td></td> 
+                </tr>   
+            </table>
+            
+       </form>
+    </td></tr>
+    
+</table>
+    
+</center>
+
+
+

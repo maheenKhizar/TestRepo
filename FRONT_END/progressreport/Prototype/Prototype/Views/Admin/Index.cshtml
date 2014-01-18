@@ -1,0 +1,31 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title="Admin Home";
+}
+
+<!DOCTYPE html>
+
+
+  
+
+  
+<div class="well">
+  <div id="datetimepicker4" class="input-append">
+    <input data-format="yyyy-MM-dd" type="text" id="ab"/>
+    <span class="add-on">
+      <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+      </i>
+    </span>
+  </div>
+</div>
+<br><br>
+       
+<script>
+var myEl = document.getElementById('datetimepicker4');
+myEl.addEventListener('click',function () {
+   
+        datetimepicker({
+        pickTime: false
+    });
+}, true);
+    </script>

@@ -1,0 +1,73 @@
+﻿@{
+    
+    Layout = "~/Layouts/_Layout.cshtml";  
+    PageData["title"] = "Edit Category";
+    
+    // Get categoryId from URL, or set to 0 if not present 
+    var categoryId = !UrlData[0].IsEmpty() ? UrlData[0] : "0"; 
+    var categoryTitle = "" ; 
+    var db = Database.Open("eShop"); 
+
+    // validation
+    Validation.RequireField("categoryTitle", "Category Title cannot be blank");
+
+    if(IsPost) 
+    { 
+        categoryId = Request["categoryId"]; 
+        categoryTitle = Request["categoryTitle"]; 
+
+        if(Validation.IsValid() && !Admin.CategoryExists(categoryTitle))
+        {
+            var sqlUpdate = "UPDATE Categories SET Title = @0 WHERE Id = @1"; 
+            db.Execute(sqlUpdate, categoryTitle, categoryId); 
+            Response.Redirect("~/Categories/"); 
+        }
+        else
+        {
+            <p><b>Category already exists or there was some other error</b></p>
+        }
+    }
+}
+
+<center>
+<table cellpadding='2' cellspacing='0' border='0' id='ap_table'>
+    <tr>
+        <td ><table cellpadding='0' cellspacing='0' border='0' width='100%'><tr><td><h2>Edit Category</h2></th>
+    </tr>
+    <tr>
+        <td><br>
+            <form method="post" action="" name="cat" id="cat" target="_top">
+                @Html.ValidationSummary()                
+                <center>
+                    <table>
+                        Category Title: 
+                        @Html.Hidden("categoryId", categoryId) 
+                        @Html.TextBox("categoryTitle", categoryTitle) 
+                        <input type="submit" value="Update" /> 
+                        @Html.ValidationMessage("categoryTitle") 
+                    </table>
+                    </form>
+                </td>        
+            </tr>
+        </table>
+        </td>
+    </tr>
+</table>
+</center>
+
+<script type="text/javascript">
+   
+    $("#prod").validate({
+    rules: {
+        title: {
+            required: true
+        }
+    },
+    messages: {
+        title: {
+            required: "Please provide a category title"
+        }
+    }
+});
+
+</script>

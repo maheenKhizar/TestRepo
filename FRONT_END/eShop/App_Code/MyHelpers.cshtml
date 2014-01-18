@@ -1,0 +1,34 @@
+﻿@helper Inc_Quantity(string content) {
+  <div class="note" 
+       style="border: 1px solid black; width: 90%; padding: 5px; margin-left: 15px;">
+    <p>
+      <strong>Note</strong>&nbsp;&nbsp; @content
+    </p>
+  </div>
+}
+
+@helper Dec_Quantity(string content) {
+  <div class="note" 
+       style="border: 1px solid black; width: 90%; padding: 5px; margin-left: 15px;">
+    <p>
+      <strong>Note</strong>&nbsp;&nbsp; @content
+    </p>
+  </div>
+}
+
+@functions { 
+    public static object getProductsForOrder(Dictionary<string, int> pIDs) 
+    { 
+        var db = Database.Open("eShop"); 
+        List<object> prods = null;
+        var sqlQuery = "SELECT Name, Price FROM Products WHERE ProductID = @0"; 
+        object q = null;
+
+        foreach(string key in pIDs.Keys)
+        {
+            q = db.Query(sqlQuery, key);            
+            prods.Add(q);
+        }
+        return prods;        
+    }
+}

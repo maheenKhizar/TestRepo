@@ -1,0 +1,132 @@
+﻿@{
+    Layout = "~/Layouts/_Layout.cshtml";  
+    PageData["title"] = "Sign Up";
+
+    var name = "";    
+    var email = "";
+    var password = "";
+    var password2 = "";
+        
+    // Validation
+        
+    Validation.RequireField("uname", "please enter first name");    
+    Validation.RequireField("email", "please enter email");
+    Validation.RequireField("password", "please enter password");
+    Validation.RequireField("cpassword", "enter password to confirm");
+
+    if(IsPost){
+        
+        if(Validation.IsValid())
+        {
+            WebSecurity.Logout(); 
+            name = Request["uname"]; 
+            email = Request["email"]; 
+            password = Request["password"]; 
+            password2 = Request["cpassword"];                              
+
+            WebSecurity.CreateUserAndAccount(userName:name, password:password, propertyValues: new { Email = email });
+            WebSecurity.Login(name, password);
+            Roles.AddUserToRole(name, "User");
+            Response.Redirect("~/default");
+        }  
+    } 
+}
+
+
+<center>
+<table></table>
+
+<table cellpadding='2' cellspacing='0' border='0' id='ap_table'>
+    <tr>
+        <td ><table cellpadding='0' cellspacing='0' border='0' width='100%'><tr><td><b>Enter your sign up information</b></th>
+    </tr>
+    <tr>
+        <td><br>
+            <form method="post" action="" name="signup" id="signup" target="_top">
+                @Html.ValidationSummary()
+                <input type="hidden" name="action" value="login">
+                <input type="hidden" name="hide" value="">
+                <center>
+                    <table>
+                        <tr><td>Username:</td><td><input type="text" name="uname" id="uname" value="@Request["uname"]" /></td>
+                            <td>
+                                <div style="height: auto">
+                                    @Html.ValidationMessage("uname")
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr><td>Email:</td><td><input type="text" name="email" id="email" value="@Request["email"]"></td>
+                            <td>
+                                <div style="height: auto">
+                                    @Html.ValidationMessage("email")
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td>Password:</td><td><input type="password" name="password" id="password" value="@Request["password"]" @Validation.For("password")></td>
+                            <td>
+                                <div style="height: auto">
+                                    @Html.ValidationMessage("password")
+                                </div>
+                                <p id="pwd"></p>
+                            </td>
+                        </tr>
+                        <tr><td>Confirm Password:</td><td><input type="password" name="cpassword" id="cpassword" value="@Request["cpassword"]" @Validation.For("cpassword")></td>
+                            <td>
+                                <div style="height: auto">
+                                    @Html.ValidationMessage("cpassword")                                    
+                                </div>                                
+                            </td>
+                        </tr>
+                        <tr><td>&nbsp;</td><td><input type="submit" value="Sign Up"></td></tr>
+                        <tr><td colspan=2>&nbsp;</td></tr>
+                    </table>
+                    </form>
+                </td>       
+            </tr>
+        </table>
+        </td>
+    </tr>
+</table>
+</center>
+
+<script type="text/javascript">
+   
+    $("#signup").validate({
+    rules: {
+        uname: {
+            required: true
+        },
+        email: {
+            required: true            
+        },
+        password: {
+            required: true,
+            minlength: 6
+        },
+        cpassword: {
+            required: true,
+            minlength: 6,
+            equalTo: "#password"
+        }
+    },
+    messages: {
+        uname: {
+            required: "Please provide a username"
+        },
+        email: {
+            required: "Please provide an email"
+        },
+        password: {
+            required: "Please provide a password",
+            minlength: "Your password must be at least 6 characters long"
+        },
+        cpassword: {
+            required: "Please provide a password",
+            minlength: "Your password must be at least 6 characters long",
+            equalTo: "Please enter the same password as above"
+        }
+    }
+});
+
+</script>

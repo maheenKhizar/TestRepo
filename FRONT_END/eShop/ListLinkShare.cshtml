@@ -1,0 +1,14 @@
+﻿@using Microsoft.Web.Helpers;
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>LinkShare Example</title>
+  </head>
+  <body>
+    <h1>LinkShare Example</h1>
+    Share: @LinkShare.GetHtml("LinkShare Example")
+      @Facebook.LikeButton("http://www.facebook.com/step.friends")
+  </body>
+</html>

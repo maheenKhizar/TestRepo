@@ -1,0 +1,49 @@
+﻿@{    
+    Layout = "~/Layouts/_Layout.cshtml";   
+    var productID = !UrlData[0].IsEmpty() ? UrlData[0] : "0"; 
+    var db = Database.Open("eShop"); 
+    var sqlSelect = "SELECT * FROM Products WHERE productID = @0"; 
+    var product = db.QuerySingle(sqlSelect, productID); 
+
+  //  Session["itemsInCart"] = 0;
+} 
+
+
+<text> 
+
+    <div style="margin-left: 20%">
+        <h1>@product.Name</h1>         
+    </div>
+
+    <div id="productDetails"  style="margin-left: 30%">
+        <img id="img" alt="Image not available" src="~/@product.ImagePath">    
+
+        <p class="price"> 
+            £@product.Price 
+        </p> 
+        <p>@product.Description</p> 
+    </div> 
+    <div id="orderForm"> 
+        <form action="~/ShoppingCart" method="post"> 
+            <fieldset> 
+                <legend>Place Order</legend> 
+                <p> 
+                    <label for="qt">Quantity:</label> <input type="text" name="qt" />
+                </p> 
+                <p> 
+                    @Html.Hidden("productID", productID)                    
+                    <input type="submit" value="Add to Cart" /> 
+                </p> 
+            </fieldset> 
+        </form> 
+        <div style="height: auto; width: 230px">
+            @Facebook.LikeButton(
+              href: "http://www.facebook.com/step.friends",
+              action: "recommend",
+              width: 250,
+              buttonLayout: "button_count",
+              showFaces: true,
+              colorScheme: "dark")
+        </div>
+    </div> 
+</text> 

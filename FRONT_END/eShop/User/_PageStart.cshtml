@@ -1,0 +1,10 @@
+﻿@{
+    // Sets the layout page for all pages in the folder.
+    Layout = "~/Layouts/_Layout.cshtml";  
+    
+if (!WebSecurity.IsAuthenticated) 
+    { 
+        string currentUrl = Request.Url.ToString(); 
+        Response.Redirect("~/Account/Login?sender=" + currentUrl); 
+    }
+}

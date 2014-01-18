@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>@PageData["title"]</title>
+      <link href="~/Styles/foundation.css" rel="stylesheet" type="text/css" />
+      <link href="~/Styles/foundation.min.css" rel="stylesheet" type="text/css" />
+      <link href="~/Styles/app.css" rel="stylesheet" type="text/css" />
+      <script src="~/Scripts/jquery-1.6.2.js"></script>
+      <script src="~/Scripts/jquery.validate.js"> </script>
+      <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>    
+
+  </head>
+  <body>
+      <div id="header">
+        @RenderPage("_Header.cshtml")          
+      </div>
+      
+        <div id="main">
+          @RenderBody()
+        </div>
+        <div id="footer">
+           
+            @RenderPage("_Footer.cshtml")
+           
+        </div>
+  </body>
+</html>

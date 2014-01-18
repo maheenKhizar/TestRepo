@@ -1,0 +1,69 @@
+﻿@{
+    Layout = "~/Layouts/_Layout.cshtml";   
+    PageData["title"] = "Manage Products";
+
+    var db = Database.Open("eShop"); 
+    var sqlSelect = "SELECT ProductID, Name, Price, ImagePath FROM Products ";
+    var products = db.Query(sqlSelect);    
+  
+}
+
+
+      <div class="row">
+
+        <!-- Side Bar -->
+
+        <div class="four mobile-four columns">
+
+          <img src="images/logo2.jpg">
+
+          <div class="hide-for-small panel">
+            <h3>Introduction</h3>
+            <h5 class="subheader">Online shopping website where things can be bought via internet. 
+            </h5>
+          </div>          
+
+          <a href="Add_Product">
+              <div class="panel callout radius" align="center">
+                <h6>Add Product</h6>
+              </div>
+          </a>
+          <a href="Categories">
+              <div class="panel callout radius" align="center">
+                <h6>Categories</h6>
+              </div>
+          </a>
+
+        </div>
+
+    <!-- End Side Bar -->
+
+    <!-- Thumbnails -->
+    
+        <div class="eight columns">
+          <div class="row">
+            @foreach (var item in products) { 
+                <div class="four mobile-two columns">
+                  <a href="/ProductDetails/@item.ProductID"><img alt="Image not available" src="~/@item.ImagePath" width="200" height="100"></a>
+
+                  <div class="panel">
+                   <a href="~/ProductDetails/@item.ProductID"> <h5>@item.Name</h5></a>
+
+                    <h6 class="subheader">@item.Price</h6>
+                      <div>
+                        <a href="Update_Product/@item.ProductID"><img src="~/Shared/images/update.jpg" alt="update" title="Update"></a>
+                        <a href="Delete_Product/@item.ProductID"><img src="~/Shared/images/delete.jpg" alt="delete" title="Delete"></a>
+                    </div>
+                  </div>                    
+                </div>     
+                           
+            }
+ 
+    <!-- End Thumbnails -->
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>

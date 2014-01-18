@@ -1,0 +1,107 @@
+﻿
+
+<h2 style="margin-left: 20%">Billing Information</h2>
+<center>
+<table></table>
+
+<form action="OrderComplete" method="post">
+<table>
+    <tr>
+        <td colspan="2">
+            <h5>1. Choose your payment Option</h5>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>
+            <label>Payment Options:</label>
+        </td>
+        <td>
+            <select style="width: auto" id="payment" name="payment">
+                <option>Credit Card</option>
+                <option>Cash</option>
+                <option>Cheque</option>
+            </select>        
+        </td>
+    </tr>
+    
+    <tr>
+        <td colspan="2">
+            <h5>3. Enter your card information</h5>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>
+            <label>Card Type:</label>
+        </td>
+        <td>
+            <select style="width: auto" id="card" name="card">
+                <option>Visa</option>
+                <option>Master</option>
+                <option>PayPal</option>                
+            </select>        
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label>Card Number:</label>
+        </td>
+        <td>
+            <input type="text" name="cnum" id="cnum">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label>Expiry Date:</label>
+        </td>
+        <td>
+            <select style="width: auto" id="month" name="month">
+                <option>Jan</option>
+                <option>Feb</option>
+                <option>March</option>                
+                <option>April</option>
+                <option>May</option>
+                <option>June</option>
+                <option>July</option>
+                <option>August</option>
+                <option>September</option>
+                <option>October</option>
+                <option>November</option>
+                <option>December</option>
+            </select>        
+        </td>
+        <td>
+            <select style="width: auto" id="year" name="year">
+               <option>2010</option>
+                <option>2011</option>
+                <option>2012</option>                
+                <option>2013</option>
+                <option>2014</option>
+                <option>2015</option>
+                <option>2016</option>
+                <option>2017</option>
+                <option>2018</option>
+                <option>2019</option>
+                <option>2020</option>                
+            </select>        
+        </td>
+    </tr>
+    <tr></tr>
+    <tr>
+        <td></td>
+
+        <td>
+            <input type="submit" value="Done">
+        </td>
+    </tr>
+
+</table>
+    </form>
+</center>

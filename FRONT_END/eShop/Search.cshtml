@@ -1,0 +1,94 @@
+﻿@{ 
+    Layout = "~/Layouts/_Layout.cshtml"; 
+    PageData["title"] = "Catalog Search"; 
+    var db = Database.Open("eShop"); 
+
+    ///////
+    var c = "Select * From Categories";
+    var cat = db.Query(c);
+    ///////
+
+    IEnumerable<dynamic> result = Enumerable.Empty<string>(); 
+    var sqlSelect = ""; 
+
+    if(IsPost)
+    {
+        var searchWords = Request["searchTerm"].Split(' '); 
+        
+        sqlSelect = "SELECT productID, Name FROM Products WHERE " + 
+        "Name LIKE @0 OR Description LIKE @0 OR Category LIKE @0"; 
+        foreach(var word in searchWords) 
+        { 
+            result = result.Concat(db.Query(sqlSelect, "%" + word + "%").ToList()); 
+        }
+    }
+   
+    // searching by categories     
+    if(!UrlData[0].IsEmpty()){
+        var catID = UrlData[0];
+
+        var cq = "Select Title From Categories WHERE Id=@0";
+        cat = db.Query(cq, catID);
+                
+        sqlSelect = "SELECT productID, Name FROM Products WHERE " + 
+        "Category Like @0"; 
+        
+    }   
+     
+} 
+
+<center>
+<table cellpadding='2' cellspacing='0' border='0' id='ap_table'>
+    <tr>
+        <td ><table cellpadding='0' cellspacing='0' border='0' width='100%'><tr><td><h2>Search Results</h2></th>
+    </tr>
+    <tr>
+        <td><br>            
+                <center>
+                    <table>
+                        <p>Search Results matching 
+                        @{
+                            if(!Request["searchTerm"].IsEmpty()){
+                                <em>@Request["searchTerm"]</em>
+                                
+                                <ul id="searchResult"> 
+                                @foreach (var item in result) 
+                                { 
+                                    <li> 
+                                        <a href="/ProductDetails/@item.productID">@item.Name</a> 
+                                    </li> 
+                                } 
+                                </ul> 
+                            }
+                            else if(!UrlData[0].IsEmpty())
+                            {
+                                foreach(var item in cat){
+                                <em>@item.Title</em>}
+                            
+                                <ul id="searchResult"> 
+                                @foreach(var item in cat)
+                                {
+                                    var val = db.Query(sqlSelect, item.Title);
+                                    
+                                    foreach(var v in val)
+                                    {
+                                        <li> 
+                                            <a href="/ProductDetails/@v.productID">@v.Name</a> 
+                                        </li> 
+                                    }
+                                }
+                                </ul> 
+                            }
+                            
+                             
+                         }</p>
+                         
+                        
+                    </table>                
+                </td>        
+            </tr>
+        </table>
+        </td>
+    </tr>
+</table>
+</center> 

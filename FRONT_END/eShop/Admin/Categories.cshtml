@@ -1,0 +1,105 @@
+﻿@{
+    Layout = "~/Layouts/_Layout.cshtml";   
+    PageData["title"] = "Categories";
+
+    var db = Database.Open("eShop"); 
+    var sqlSelect = "SELECT * FROM Categories";
+    var cq = "Insert into Categories(Title) values(@0)";
+    var cats = db.Query(sqlSelect);
+
+    // Validation        
+    Validation.RequireField("title", "please enter category title");
+    
+    if(IsPost){
+        
+        if(Validation.IsValid())
+        {            
+            var title = Request["title"];            
+            
+            if(!Admin.CategoryExists(title))
+            {
+                if(db.Execute(cq, title) > 0)
+                {
+                    <p><b>Category added successfully</b></p>
+                    Response.Redirect("Categories");
+                }
+                else
+                {
+                    <p><b>There was an error while adding the category</b></p>
+                }
+            }
+            else
+            {
+                <p><b>Category already exists</b></p>
+            }
+        }  
+    }
+}
+
+<h2 style="margin-left: 400px"> Categories</h2>
+<center>
+<table></table>
+    
+<table cellpadding='0' cellspacing='0' border='0' width='50%'>
+         
+    @foreach(var cat in cats)
+    {
+        <tr>
+            <td>@cat.Title</td>
+            <td style="float: right"><a href="Edit_Category/@cat.Id">Edit</a> / <a href="Delete_Category/@cat.Id">Delete</a></td>            
+        </tr>
+    }    
+    
+    
+</table>
+        
+</center>
+
+<center>
+<table></table>
+
+<table cellpadding='2' cellspacing='0' border='0' id='ap_table'>
+    <tr>
+        <td ><table cellpadding='0' cellspacing='0' border='0' width='100%'><tr><td><b>Add new Category</b></th>
+    </tr>
+    <tr>
+        <td><br>
+            <form method="post" action="" name="cat" id="cat" target="_top">
+                @Html.ValidationSummary()                
+                <center>
+                    <table>
+                        <tr><td>Title:</td><td><input type="text" name="title" id="title" value="@Request["title"]" /></td>
+                            <td>
+                                <div style="height: auto">
+                                    @Html.ValidationMessage("title")
+                                </div>
+                            </td>
+                        </tr>                        
+                        <tr><td>&nbsp;</td><td><input type="submit" value="Save"></td></tr>
+                        <tr><td colspan=2>&nbsp;</td></tr>
+                    </table>
+                    </form>
+                </td>        
+            </tr>
+        </table>
+        </td>
+    </tr>
+</table>
+</center>
+
+<script type="text/javascript">
+   
+    $("#prod").validate({
+    rules: {
+        title: {
+            required: true
+        }
+    },
+    messages: {
+        title: {
+            required: "Please provide a category title"
+        }
+    }
+});
+
+</script>

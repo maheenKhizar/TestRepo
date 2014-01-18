@@ -1,0 +1,111 @@
+﻿@{
+    Layout = "~/Layouts/_Layout.cshtml";    
+    
+    
+    Dictionary<string, int> pIDs = (Dictionary<string, int>) Session["productList"];
+     
+     if(IsPost) 
+     {
+        // items in cart    
+        int quant = Convert.ToInt32(Request["qt"]);
+        string id = Request["productID"].ToString();    
+        
+        if(!pIDs.ContainsKey(id))        
+        {
+            pIDs.Add(id, quant);
+        }
+        else
+        {
+            int count = pIDs[id];
+            count += quant;
+            pIDs[id] = count;
+        }
+
+     }
+
+    // removing item from cart
+    if(UrlData.Contains("remove"))
+    {
+        if(pIDs.ContainsKey(UrlData[0]))
+        {
+            pIDs.Remove(UrlData[0]);
+            Session["productList"] = pIDs;            
+        }        
+    }
+
+    // adding item to cart
+    if(!UrlData[0].IsEmpty() && !UrlData.Contains("remove"))
+    {
+        if(!pIDs.ContainsKey(UrlData[0]))        
+        {
+            pIDs.Add(UrlData[0], 1);
+        }
+        else
+        {
+            int count = pIDs[UrlData[0]];
+            count++;
+            pIDs[UrlData[0]] = count;
+        }
+    }
+    Session["productList"] = pIDs;
+
+    // getting selected products from db
+    var q = "SELECT Name, Price FROM Products WHERE ProductID = @0";
+    var db = Database.Open("eShop");
+
+    int price = 0;
+
+}
+
+<h2 style="margin-left: 20%">Shopping Cart</h2>
+<center>
+    <table></table>
+<table cellpadding='2' cellspacing='10' border='0' id='ap_table'>
+    <tr>
+        <th>Item</th>
+        <th>Quantity</th>        
+        <th>Remove</th>
+        <th>Price</th>
+    </tr>
+
+    @foreach(string item in pIDs.Keys)
+    {
+        var prod = db.Query(q, item);
+        
+        foreach(var p in prod)
+        {
+            <tr>
+                <td><a href="~/ProductDetails/@item">@p.Name</a></td>
+                <td> @pIDs[item]</td>
+                <td><a href="ShoppingCart/@item/remove">remove</a></td>
+                <td>@p.Price @{ price += p.Price; }</td>
+            </tr>
+        }
+    }
+           
+    <tr>@{ Session["totalPrice"] = price; }</tr>      
+<tr>
+    <td>
+        <div style="float: left; margin-left: 10px">
+            <a href="~/default">
+                <div class="panel callout radius" align="center" style="width: auto">
+                    <h6><< Proceed Shopping</h6>
+                </div>
+            </a>
+        </div>
+    </td>
+    <td></td>
+    <td></td>
+    
+    <td>
+        <div style="float: right; margin-right: 10px">
+            <a href="~/User/Checkout">
+                <div class="panel callout radius" align="center" style="width: auto">
+                    <h6>Check out >></h6>
+                </div>
+            </a>
+        </div>
+    </td>
+</tr>
+</table>   
+</center>

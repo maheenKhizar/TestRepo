@@ -1,0 +1,52 @@
+﻿@{
+    var db = Database.Open("eShop");
+    var q = "Select * from Categories";
+    var cats = db.Query(q);
+
+    Bing.SiteUrl = "www.asp.net";
+    Bing.SiteTitle = "eShop Custom Search";
+}
+
+@using Microsoft.Web.Helpers;
+<div class="row">
+    <div class="twelve columns">
+
+    <!-- Navigation -->
+
+      <div class="row">
+        <div class="twelve columns">
+
+          <ul class="top-bar">
+            <ul>
+          <li class="name"><h1>@MembershipHelpers.AS()</h1></li>
+              <li class="has-dropdown">
+                  <a href="#">Categories</a>                  
+                  <ul class="dropdown">
+                      @foreach(var item in cats){
+                        <li><a href="Search/@item.Id">@item.Title</a></li>
+                      }
+                  </ul> </li>
+                <li><a href="~/About_Us.cshtml">About Us</a></li>
+              <li><a href="~/Contact_Us.cshtml">Contact Us</a></li>
+              
+                      
+        </ul>
+        <section>
+          <ul class="right">              
+              @MembershipHelpers.AccountSummary()
+              <span style="float: right; width:40%; margin-top: 10px;margin-right:10px; text-align: right;">@RenderPage("~/Shared/Partials/_Search.cshtml")</span> 
+          </ul>            
+        </section>
+              
+      </div>      
+          
+          
+    </div>     
+ </div>      
+</div>
+<p></p>
+
+    
+        
+            
+    <!-- End Navigation -->

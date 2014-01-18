@@ -1,0 +1,28 @@
+﻿@helper AccountSummary() 
+{ 
+    if(WebSecurity.IsAuthenticated) { 
+        <text> 
+            <a href="@Href("~/User/Profile")">Welcome @WebSecurity.CurrentUserName  | </a>
+            <a href="@Href("~/User/ShoppingCart")">Cart |</a> 
+            <a href="@Href("~/Logout")">Logout</a>
+        </text> 
+    } 
+    else { 
+        <text> 
+            <a href="@Href("~/Login")">Login |</a>              
+            <a href="@Href("~/Signup")">Signup</a> 
+        </text> 
+    } 
+}
+
+@helper AS() 
+{ 
+    if (Roles.IsUserInRole(WebSecurity.CurrentUserName, "Admin")) 
+    {
+        <a href="@Href("~/Admin/Manage_Products")">Home</a>     
+    }
+    else
+    {    
+        <a href="@Href("~/default")">Home</a>    
+    } 
+}
